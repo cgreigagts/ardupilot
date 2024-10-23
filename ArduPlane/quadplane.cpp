@@ -1688,8 +1688,12 @@ void SLT_Transition::update()
             // using vectored yaw for tilt-rotors as the yaw control
             // is needed to maintain good control in forward
             // transitions
+            GCS_SEND_TEXT(MAV_SEVERITY_WARNING, "Yaw Target Removed");
             quadplane.attitude_control->reset_yaw_target_and_rate();
             quadplane.attitude_control->rate_bf_yaw_target(0.0);
+        } else {
+            // If yaw target is NOT zeroed out, send this message
+            GCS_SEND_TEXT(MAV_SEVERITY_WARNING, "Yaw Target Maintained");
         }
         if (quadplane.tiltrotor.enabled() && !quadplane.tiltrotor.has_fw_motor()) {
             // tilt rotors without decidated fw motors do not have forward throttle output in this stage
