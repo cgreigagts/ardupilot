@@ -8,8 +8,7 @@ name: ArgenTech Build
 on:
   push:
     branches:
-      - ArgenTech
-      - master
+      - Transition-Yaw-Debug
     paths-ignore:
       # remove non chibios HAL
       - 'libraries/AP_HAL_Linux/**'

@@ -2,6 +2,8 @@ name: Cygwin Build
 
 on:
   push:
+    branches:
+      - Transition-Yaw-Debug
     paths-ignore:
       # remove other vehicles
       - 'AntennaTracker/**'
