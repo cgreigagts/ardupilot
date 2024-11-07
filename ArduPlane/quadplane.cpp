@@ -1729,6 +1729,7 @@ void SLT_Transition::update()
 
         float transition_scale = (trans_time_ms - transition_timer_ms) / trans_time_ms;
         float throttle_scaled = last_throttle * transition_scale;
+        float throttle_scaled_old = throttle_scaled;
 
         // set zero throttle mix, to give full authority to
         // throttle. This ensures that the fixed wing controllers get
@@ -1747,16 +1748,16 @@ void SLT_Transition::update()
             const float ratio = (constrain_float(quadplane.tiltrotor.current_tilt, airspeed_reached_tilt, quadplane.tiltrotor.get_fully_forward_tilt()) - airspeed_reached_tilt) / (quadplane.tiltrotor.get_fully_forward_tilt() - airspeed_reached_tilt);
             const float fw_throttle = MAX(SRV_Channels::get_output_scaled(SRV_Channel::k_throttle),0) * 0.01;
             throttle_scaled = constrain_float(throttle_scaled * (1.0-ratio) + fw_throttle * ratio, 0.0, 1.0);
-            AP::logger().Write("THR0", "THRS",
-                   "m", // units: m
-                   "0", // mult: 1
-                   "f", // format: float
-                   throttle_scaled);
-            AP::logger().Write("THR1", "fwthr",
-                   "m", // units: m
-                   "0", // mult: 1
-                   "f", // format: float
-                   fw_throttle);
+            AP::logger().Write("TEST", "TimeUS,thrscal,fwthr,ratio,lastthr,thrscal1",
+                   "smmmmm", // units: seconds, meters
+                   "F00000", // mult: 1e-6, 1e-2
+                   "Qfffff", // format: uint64_t, float
+                   AP_HAL::micros64(),
+                   throttle_scaled,
+                   fw_throttle,
+                   ratio,
+                   last_throttle,
+                   throttle_scaled_old);
         }
         quadplane.assisted_flight = true;
         quadplane.hold_stabilize(throttle_scaled);
